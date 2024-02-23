@@ -1,0 +1,51 @@
+W programie stwórz klasę reprezentującą punkt w układzie OXYZ. Klasa powinna zawierać:
+
+1. Nazwę punktu (zmienna typu string).
+2. Trzy prywatne atrybuty określające współrzędne x, y oraz z (zmienne typu double).
+ 
+
+W programie stwórz również klasę reprezentującą układ OXYZ. Klasa powinna zawierać: 
+
+1. Skrukturę danych przechowującą punkty.
+2. Nazwę układu (zmienna typu string).
+3. Przeciążone operatory dodawania oraz odejmowania w miejscu (odpowiednio '+=' i '-=') zaimplementowane wewnątrz klasy. Wynikiem dodawania w miejscu układów współrzędnych jest układ współrzędnych zawierający wszystkie punkty z dodawanych układów współrzędnych. Analogicznie zdefiniowane jest odejmowanie w miejscu układów współrzędnych,  tj. obecność każdego punktu z układu odejmowanego (odjemnika) jest weryfikowana w układzie odjemnym na podstawie koordynat. W przypadku obecności punktu w układzie odejmowanym, punkt ten jest usuwany. Czynność jest wykonywana dla wszystkich punktów mających te same koordynaty co punkt do usunięcia, bez względu na nazwę punktów. Nazwy układów współrzędnych nie ulegają zmianie.
+4. Funkcję dodającą punkt do układu współrzędnych.
+5. Funkcję usuwającą punkt o nazwie podanej jako argument funkcji. W przypadku, gdy w układzie współrzędnych znajduje się więcej niż jeden punkt o nazwie do usunięcia, wszystkie te punkty są usuwane. Funkcja nic nie robi w przypadku, gdy punkt do usunięcia nie istnieje w układzie współrzędnych. 
+W powyższej klasie funkcja dodająca punkt do układu współrzędnych oraz operatora +=  nic nie robi w przypadku dodawania punktu o tej samej nazwie i tych samych koordynatach co punkt już istniejący w układzie.*
+
+ 
+
+Poza klasą należy przeciążyć operator strumienia wyjściowego ('<<') pozwalający na wyświetlenie
+
+- punktu w formacie "nazwa x y z"
+
+- układu - wszystkie punkty wyświetlane są za pomocą przeładowanego operatora strumienia wyjściowego (jak wyżej) i oddzielone od siebie ciągami znaków "; ".
+
+ 
+
+Poza klasą należy również przeciążyć operatory dodawania oraz odejmowania ('+' i '-') układów współrzędnych oraz punktów. Wynikiem dodawania układów współrzędnych jest układ współrzędnych zawierający wszystkie punkty z dodawanych układów współrzędnych (w przypadku braku miejsca priorytet ma układ będący pierwszym argumentem operatora). Analogicznie zdefiniowane jest odejmowanie układów współrzędnych (patrz też opis operatora -= powyżej). Wynikiem dodawania punktów jest punkt o sumie wszystkich koordynat. Wynikiem odejmowania punktów jest punkt o różnicy koordynat. Nazwy nowych punktów oraz nowych układów współrzędnych stworzone są przez połączenie nazw argumentów operatora połączonych odpowiednio znakiem '+' lub '-'.
+
+ 
+
+W funkcji main należy:
+
+ 
+
+1. Pobrać od użytkownika nazwę dwóch układów współrzędnych i stworzyć je.
+2. Pobrać od użytkownika dla każdego z M = 4 punktów jego nazwę i współrzędne x, y, z. Stworzyć punkt i umieścić go w pierwszym układzie współrzędnych. Informacje dotyczące kolejnych liczb są wprowadzane przez użytkownika BEZ poprzedzających komunikatów. W przypadku błędnie wprowadzonych danych należy natychmiastowo powtórnie wczytać błędny parametr.
+3. Pobrać od użytkownika dla każdego z N = 3 punktów jego nazwę i współrzędne x, y, z. Stworzyć punkt i umieścić go w drugim układzie współrzędnych. Informacje dotyczące kolejnych liczb są wprowadzane przez użytkownika BEZ poprzedzających komunikatów. W przypadku błędnie wprowadzonych danych należy natychmiastowo powtórnie wczytać błędny parametr.
+4. Pobrać od użytkownika nazwę trzeciego układu współrzędnych i stworzyć go.
+5. Trzeciemu układowi współrzędnych dodać w miejscu pierwszy układ współrzędnych i odjąć w miejscu drugi układ współrzędnych.
+6. Do drugiego układu współrzędnych dodać sumę wszystkich punktów z pierwszego układu oraz różnicę wszystkich punktów z trzeciego układu współrzędnych. W przypadku braku miejsca wpisz sumę oraz różnicę na dwie ostanie pozycje tablicy.
+7. Wyświetlić (używając zdefiniowanego operatora strumieniowania) po kolei zawartość wszystkich trzech układów współrzędnych oddzielone od siebie znakiem spacji.
+Przykładowo dla argumentów wejściowych
+
+ukladA ukladB a1 0 0 0 a2 1 2 3 a3 -4 -5 1 a4 2 -1 -6 b1 1 2 3 b2  0 0 0 b3 9.2 1.2 4 ukladC   
+
+ 
+
+program powinien wyświetlić
+
+ 
+
+a1 0 0 0; a2 1 2 3; a3 -4 -5 1; a4 2 -1 -6 b1 1 2 3; b2 0 0 0; b3 9.2 1.2 4; a1+a2+a3+a4 -1 -4 -2; a3-a4 -6 -4 7 a3 -4 -5 1; a4 2 -1 -6

@@ -1,0 +1,239 @@
+3 zadania, 1,5h
+
+1) Opisz czym są kolizje w tablicach skrótów, podaj przykład jak algorytmy radzą sobie z tym problemem. 
+
+2) Na podstawie zaimplementowanego przez siebie kodu krótko opisz na czym polega 'Rotacja w lewo' lub 'Rotacja w prawo' w kontekście BST
+
+3) Zaimplementuj dowolny sposób przeszukiwania grafu wraz z krótkim opisem.
+
+
+=====================================================================================
+
+Zadanie 1.
+
+Kolizja w tablicy skrótów to sytuacja w której wartość funkcji mieszającej obliczonej dla klucza danego elementu wstawianego do tablicy pokrywa się z wartością tej funkcji obliczoną dla klucza elementu, który jest już w tablicy.
+Sposoby radzenia sobie z tym problemem:
+a) najprostszy to zrezygnowanie ze wstawienia elementu lub jego zamiana,
+b) metoda łańcuchowa czyli przechowywanie elementów nie bezpośrednio w tablicy lecz na liście powiązanej z danym indeksem
+c) adresowanie otwarte czyli wstawianie elementu w  innym miejscu niż to wynika z funkcji mieszającej. Rozróżniamy tu: szukanie liniowe, szukanie kwadratowe i mieszanie podwójne.
+d) haszowanie kukułcze czyli zastosowanie dwóch tablic i dwóch funkcji haszujących. Jeśli przy wstawianiu kolizji do pierwszej tablicy wystąpi kolizja to element zostaje wstawiony do drugiej tablicy przy pomocy drugiej funkcji haszującej. Jeśli wtedy też wystąpi kolizja to algorytm wstawia element rekurencyjnie do pierwszej tablicy "na siłę"
+
+
+//===================================================================================
+Zadanie 2.
+
+/*
+Rotacja drzewa to operacja na drzewie BST, która zmienia jego strukturę bez zmiany kolejności elementów, tzn. przejście in-order dla tego drzewa da takie same wyniki przed jak i po rotacji. Istnieją dwie symetryczne rotacje: prawa i lewa.
+Dla przykładowego drzewa:
+
+A – korzeń drzewa
+B – lewy syn A, który zajmie miejsce A. Nazywamy go piwotem.
+BL, BR – lewy i prawy syn B
+AR – prawy syn A
+Po wykonaniu rotacji w prawo B zajmuje miejsce A, a A staje się prawym synem B. Dodatkowo przemieszcza się również węzeł BR, czyli prawy syn B. Staje się on lewym synem A.
+*/
+
+#include <iostream>
+#include <string>
+#include <cstdlib>
+#include <ctime>
+
+class BSTNode
+{
+    public:
+    BSTNode * up, * left, * right;
+    int key;
+};
+
+std::string cr, cl, cp;  // łańcuchy do znaków ramek
+
+void printBT(std::string sp, std::string sn, BSTNode * v)
+{
+    std::string s;
+    if(v)
+    {
+        s = sp;
+        if(sn == cr) s [s.length() - 2] = ' ';
+        printBT(s + cp, cr, v -> right);
+
+        s = s.substr(0, sp.length()-2);
+        std::cout << s << sn << v -> key << std::endl;
+
+        s = sp;
+        if(sn == cl) s[s.length() - 2] = ' ';
+        printBT(s + cp, cl, v -> left);
+    }
+}
+
+void insertBST(BSTNode * & root, int k)
+{
+    BSTNode * w, * p;
+    w = new BSTNode;
+    w -> left = w -> right = NULL;
+    w -> key = k;
+    p = root;
+    if(!p)
+        root = w;
+    else
+        while(true)
+            if(k < p -> key)
+            {
+                if(!p->left)
+                {
+                    p -> left = w;
+                    break;
+                }
+                else p = p -> left;
+            }
+            else
+            {
+                if(!p->right)
+                {
+                    p -> right = w;
+                    break;
+                }
+                else p = p -> right;
+            }
+
+    w -> up  = p;
+}
+
+// Rotacja w prawo
+void rot_R(BSTNode * & root, BSTNode * A)
+{
+    BSTNode * B = A -> left, * p = A -> up;
+
+    if(B)
+    {
+        A -> left = B -> right;
+        if(A -> left) A -> left -> up = A;
+
+        B -> right = A;
+        B -> up = p;
+        A -> up = B;
+
+        if(p)
+        {
+            if(p -> left == A) p -> left = B;
+            else p -> right = B;
+        }
+        else root = B;
+    }
+}
+
+int main()
+{
+    int i;
+    BSTNode * root = NULL;
+
+    cr = cl = cp = "  ";
+    cr [0] = 218; cr [1] = 196;
+    cl [0] = 192; cl [1] = 196;
+    cp [0] = 179;
+    srand (time(NULL));
+
+    for(i = 0; i < 15; i++)
+        insertBST(root, 10 + rand() % 90);
+
+    printBT("", "", root);
+    std::cout << std::endl << std::endl;
+
+    if(root->right)
+        rot_R(root, root->right);
+
+    printBT("", "", root);
+    std::cout << std::endl << std::endl;
+    return 0;
+}
+
+//===============================================================
+Zadanie 3.
+
+/*
+Do przejścia grafgu wykorzystuje się w tej implementacji macierz sąsiedztwa i kolejkę (lista jednokierunkowa). W kolejce umieszcza się numer wierzchołka startowego i oznacza go jako odwiedzony. W głównej pętli w funkcji BFS odczytuje się z kolejki numer wierzchołka i ten odczytaany numer usuwa z kolejki, po czym przegląda się jego sąsiadów  i szuka nieodwiedzonego sąsiada. Nnstępnie umieszcza się go w kolejce i oznacza jako odwiedzonego.
+W funkcji main program tworzy tablicę wskaźników  i tablicę odwiedzin. Tworzy wierze macierzy i wypełnia je zerami (zeruje tablicę odwiedzin. Odczytuje kolejno zdefiniowane krawędzie podane przez wierzchołki startowe i końcowe. Algorytm BFS przechoodzi graf wszerz.
+*/
+
+#include <iostream>
+#include <iomanip>
+
+class slistEl
+{
+    public:
+    slistEl * next;
+    int data;
+};
+
+int n;// Liczba wierzchołków
+char ** A;// Macierz sąsiedztwa
+bool * visited;// Tablica odwiedzin
+
+void BFS(int v)//przejście BFS
+{
+    int i;
+    slistEl *q, *head, *tail; //kolejka
+//wierzchołek umieszczony w kolejce i oznaczony jak odwiedzony
+    q = new slistEl;
+    q -> next = NULL;
+    q -> data = v;
+    head = tail = q;
+    visited[v] = true;
+
+    while(head)
+    {
+        v = head -> data;//odczytanie wierzchołka z kolejki i jego usunięcie
+        q = head;
+        head = head -> next;
+        if(!head) tail = NULL;
+        delete q;
+        std::cout << std::setw(3) << v;
+
+        for(i = 0; i < n; i++)
+            if((A[v][i] == 1) && !visited[i])
+            {
+                q = new slistEl;//umieszczenie w kolejce nieodwiedzonych sąsiadów i oznaczenie jako odwiedzonych
+                q -> next = NULL;
+                q -> data = i;
+                if(!tail) head = q;
+                else tail -> next = q;
+                tail = q;
+                visited[i] = true;
+            }
+    }
+}
+
+int main()
+{
+    int m, i, j, v1, v2;
+    std::cin >> n >> m;
+    A = new char * [n];
+    visited = new bool [n];
+//utworzenie macierzy i następnie jej wyzerowanie
+    for(i = 0; i < n; i++)
+        A [i] = new char [n];
+
+    for(i = 0; i < n; i++)
+    {
+        visited [i] = false;
+        for(j = 0; j < n; j++) A [i][j] = 0;
+    }
+
+//odczytanie krawędzi
+    for(i = 0; i < m; i++)
+    {
+        std::cin >> v1 >> v2;
+        A [v1][v2] = 1;
+    }
+    std::cout << std::endl;
+
+//przejście grafu
+    BFS(0);
+
+//usunięcie macierzy
+    for(i = 0; i < n; i++)
+        delete A[i];
+    delete [] A;
+    delete [] visited;
+    std::cout << std::endl;
+    return 0;
+}

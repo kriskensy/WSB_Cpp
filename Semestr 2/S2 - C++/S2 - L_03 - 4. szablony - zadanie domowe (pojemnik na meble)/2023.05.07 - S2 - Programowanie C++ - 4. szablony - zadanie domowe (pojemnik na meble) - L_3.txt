@@ -1,0 +1,39 @@
+Napisz wzorzec (szablon) klasy, która będzie służyła do przechowywania obiektów wybranej klasy jako pojemnik. Wzorzec klasy ma:
+
+wykorzystywać jednowymiarową tablicę o rozmiarze 20 do przechowywania obiektów,
+posiadać licznik elementów znajdujących się w tablicy,
+zapisywać elementy pod najmniejszymi indeksami,
+posiadać metodę wpisującą nowy element do tablicy (obiekt podany jako argument funkcji) jeśli w tablicy jest miejsce,
+W programie stwórz klasę przedstawiającą mebel oraz klasę przedstawiającą stół.
+
+Klasa przedstawiająca mebel powinna zawierać:
+
+cztery atrybuty chronione: waga (w kg), szerokość, głębokość i wysokość (w cm)
+Korzystając z klasy przedstawiającej mebel (dziedziczenie) stwórz klasę przedstawiającą stół, która dodatkowo zawiera:
+
+dwa atrybuty prywatne: numer identyfikacyjny (ciąg 4 znaków (liter lub liczb) bez spacji), liczbę nóg (zmienna typu int),
+konstruktor inicjalizujący wszystkie powyższe atrybuty w kolejności podanej powyżej
+destruktor
+Dla obiektów klasy przedstawiającej stół należy przeładować operator strumienia wyjściowego ('<<') pozwalający na wyświetlenie stołu (kolejno oddzielone od siebie spacjami atrybuty numer identyfikacyjny, liczba nóg, waga) oraz operator porównania ('==') sprawdzający, czy liczba nóg porównywanych stołów jest równa.
+
+Dostęp do atrybutów obiektów spoza klasy powinien się odbywać poprzez odpowiednie funkcje dostępowe.
+
+W funkcji main należy:
+
+1. Stworzyć obiekt pojemnik do przechowywania obiektów klasy przedstawiającej stół.
+
+2. Stworzyć 5 obiektów klasy przedstawiającej stół. Informacje dotyczące kolejnych stołów są wprowadzane przez użytkownika BEZ poprzedzających komunikatów. Sprawdzanie poprawności wprowadzanych danych NIE jest wymagane.
+
+3. Stworzone 5 obiektów należy dodać do pojemnika w kolejności wprowadzania danych przez użytkownika.
+
+4. Wyświetlić zwartość pojemnika używając przeładowanego operatora strumienia wyjściowego ('<<', jak wyżej) oraz oddzielając dane dotyczące poszczególnych stołów znakiem spacji.
+
+5. Sprawdzić czy liczba nóg ostatniego i przedostatniego stołu ma równą liczbę nóg. Jeśli tak, to wyświetlić (poprzedzone spacją) słowo "equal", jeśli nie to wyświetlić (poprzedzone spacją) słowo "different".
+
+Przykładowo dla argumentów wejściowych
+
+43 190 95 75 Aa00 4 19 80 60 73 Bb01 4 50 210 100 77 Cc02 4 15 85 50 74 Dd03 4 49 200 90 76 Ee04 4
+
+program powinien wyświetlić
+
+Aa00 4 43 Bb01 4 19 Cc02 4 50 Dd03 4 15 Ee04 4 49 equal

@@ -1,0 +1,183 @@
+Klasa reprezentująca punkt w układzie współrzędnych zawiera:
+
+atrybuty chronione: dwie zmienne typu float określające współrzędne punktu (x,y) oraz zmienną typu string określającą nazwę punktu,
+konstruktor inicjalizujący powyższe atrybuty w kolejności: nazwa punktu, współrzędna x, współrzędna y,
+przeładowany operator "<", który porównuje obiekty na podstawie odległości punktu od początku układu współrzędnych. W przypadku gdy odległość punktu od początku układu współrzędnych dwóch porównywanych obiektów jest identyczna, mniejszy jest ten, którego nazwa występuję wcześniej w porządku alfabetycznym.
+przeładowany operator strumienia wyjściowego ('<<') pozwalający na wyświetlenie punktu (kolejno oddzielone od siebie spacjami atrybuty nazwa punktu, współrzędna x, współrzędna y).
+Korzystając z klasy przedstawiającej punkt (dziedziczenie) stwórz klasę przedstawiającą koło, która zawiera:
+
+atrybuty prywatne: zmienną typu float reprezentującą promień koła oraz zmienną typu string określającą nazwę koła,
+konstruktor wywołujący konstruktor z klasy bazowej (inicjalizacja atrybutów z klasy bazowej reprezentującej punkt i tym samym środek koła) i inicjalizujący powyższe atrybuty w kolejności: nazwa koła, długość promienia,
+Klasa reprezentująca układ współrzędnych zawiera:
+
+strukture danych przechowującą obiekty klasy reprezentującej punkt w kolejności malejącej odległości punktu od środka układu współrzędnych (pod indeksem 0 znajduje się punkt, który jest najdalej od środka układu współrzędnych). W przypadku gdy odległość dwóch punktów od początku układu współrzędnych jest identyczna, mniejszy jest ten, którego nazwa występuję wcześniej w porządku alfabetycznym,   
+metodę dodającą punkt podany jako argument,
+metodę wyświetlającą punkty,
+metodę sprawdzającą czy wszystkie punkty zapisane w strukturze leżą wewnątrz koła podanego jako argument.
+W funkcji main należy:
+
+1. Stworzyć obiekt klasy przedstawiającej układ współrzędnych.
+
+2. Stworzyć 6 obiektów klasy przedstawiającej punkt. Informacje dotyczące kolejnych punktów są wprowadzane przez użytkownika BEZ poprzedzających komunikatów w kolejności jak w konstruktorze. Sprawdzanie poprawności wprowadzanych danych NIE jest wymagane.
+
+3. Stworzone 6 obiektów należy dodać do obiektu klasy przedstawiającej układ współrzędnych.
+
+4. Wyświetlić punkty.
+
+5. Stworzyć obiekt przedstawiający koło. Informacje dotyczące koła są wprowadzane przez użytkownika BEZ poprzedzających komunikatów w kolejności jak w konstruktorze (konstruktor klasy reprezentującej punkt i koło). Sprawdzanie poprawności wprowadzanych danych NIE jest wymagane.
+
+6. Sprawdzić czy wszystkie punkty z układu współrzędnych leżą na zewnątrz stworzonego koła i wyświetlić 1 gdy leżą na zewnątrz koła lub 0 gdy przynajmniej jeden punkt nie leży na  zewnątrz koła.
+
+UWAGA: Operatory porównania dla typu string są przeładowane. Odległość dwóch punktów (P1(x1,y1), P2(x2,y2) ) w układzie współrzędnych jest dana wzorem: sqrt((x1-x2)2+(y1-y2)2). Funkcja sqrt() jest dostępna w bibliotece cmath.
+
+ 
+
+Przykładowo dla argumentów wejściowych
+
+p0 1 1 p1 2 2 p3 5 5 p4 1 1 p5 0.5 0.5 p 1 1 Pk 1 1 k1 10
+
+program powinien wyświetlić
+
+p5 0.5 0.5 p 1 1 p3 5 5 p0 1 1 p4 1 1 p1 2 2 0
+
+
+===================================================KOD Z PLIKU OD PROWADZĄCEGO=============================
+
+#include <iostream>
+#include <string>
+#include <set>
+#include <algorithm>
+#include <cmath>
+#include <functional>
+
+class Point
+{
+    public:
+        Point(std::string name_, float x_, float y_)
+        : name(name_), x(x_), y(y_)
+        {
+            std::cout << "Tworze punkt z danymi" << std::endl;
+        }
+
+        Point()
+        {
+            std::cout << "Tworze punkt" << std::endl;
+        }
+        float calcDistance(const Point& toCalc) const;
+
+        inline std::string getname() const { return name;}
+        inline float getX() const {return x;}
+        inline float getY() const {return y;}
+
+        bool operator<(const Point& toCompare) const;
+        bool operator>(const Point& toCompare) const;
+
+    protected:
+        std::string name;
+        float y;
+
+    private:
+        float calcDistance() const;
+        float x;
+};
+
+float Point::calcDistance() const
+{
+    return sqrt(x*x + y*y);
+}
+float Point::calcDistance(const Point& toCalc) const
+{
+    return sqrt((x-toCalc.getX())*(x-toCalc.getX()) + (y-toCalc.getY())*(y-toCalc.getY()));
+}
+
+bool Point::operator<(const Point& toCompare) const
+{
+    if (calcDistance() == toCompare.calcDistance())
+        return name < toCompare.getname();
+    return calcDistance() < toCompare.calcDistance();
+}
+
+bool Point::operator>(const Point& toCompare) const
+{
+    return !operator<(toCompare);
+}
+
+std::ostream& operator << (std::ostream& out, const Point& point)
+{
+    return out << "Point: " << point.getname() << "(" << point.getX() << ", " << point.getY() << ")";
+}
+
+class Circle : public Point
+{
+    public:
+        Circle(std::string nameCircle_, float radius_, std::string namePoint_, float x_, float y_)
+            : Point(namePoint_, x_, y_), name(nameCircle_), radius(radius_)
+        {
+            std::cout << "Tworze kolo z danymi" << std::endl;
+        }
+        Circle()
+        {
+            std::cout << "Tworze kolo" << std::endl;
+        }
+        std::string getName() const { return name; }
+        float getRadius() const { return radius; }
+    private:
+        std::string name;
+        float radius;
+};
+
+std::ostream& operator<<(std::ostream& out, const Circle& circle)
+{
+    return out << static_cast<const Point&>(circle) << ", circle: " << circle.getName() << ", radius = " << circle.getRadius();
+};
+
+class CoordinateSystem
+{
+    public:
+        void addPoint(const Point& toAdd) { points.insert(toAdd); }
+        bool arePointsInsideCircle(const Circle& circle);
+    private:
+        std::set<Point, std::greater<Point>> points;
+
+        friend std::ostream& operator<<(std::ostream& out, const CoordinateSystem &toDisp)
+        {
+            for (const auto& point : toDisp.points)
+                out << point << " ";
+            return out;
+        }
+};
+
+bool CoordinateSystem::arePointsInsideCircle(const Circle& circle)
+{
+    for (const auto& point : points)
+    {
+        if (point.calcDistance(circle) > circle.getRadius())
+            return false;
+    }
+    return true;
+}
+
+
+int main()
+{
+    CoordinateSystem oxy;
+
+    constexpr size_t noOfPoints{6};
+
+    for (size_t i = 0; i < noOfPoints; i++)
+    {
+        std::string namePoint;
+        float x, y;
+        std::cin >> namePoint >> x >> y;
+        oxy.addPoint(Point(namePoint, x, y));
+    }
+
+    std::cout << oxy << std::endl;
+    
+    std::string namePoint, nameCircle;
+    float x, y, radius;
+    std::cin >> namePoint >> x >> y >> nameCircle >> radius;
+    
+    Circle myCircle(nameCircle, radius, namePoint, x, y);
+    std::cout << oxy.arePointsInsideCircle(myCircle) << std::endl;
+}

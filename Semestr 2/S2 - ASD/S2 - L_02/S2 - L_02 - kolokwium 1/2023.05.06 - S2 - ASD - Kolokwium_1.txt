@@ -1,0 +1,210 @@
+/*
+Zadanie 1
+Proszę o napisanie algorytmu odwzorowującego zachowanie STOSu (na omawianych listach).
+Który będzie wykonywał następujące operacje:
+- sprawdzenie, czy lista jest pusta.
+- odczyt elementów listy
+- zapis elementu do listy
+- usunięcie elementu z listy
+*/
+
+#include <iostream>
+
+const int arraySize = 10; //przypisanie rozmiaru tablicy
+
+class Stack
+{
+    public:
+        Stack(int S); //konstruktor
+        ~Stack(); //destruktor
+        bool isEMpty(); //sprawdzenie czy stos jest pusty, jeśli tak to nie mogę nic więcej z niego ściągać
+        void displayAll();
+        int push(int element);
+        void pop();
+        int top();
+
+    private:
+        int sptr; //wskaźnik stosu
+        int *Array; //tablica dynamiczna
+};
+
+    Stack::Stack(int S)
+    {
+        Array = new int[arraySize];
+        sptr = 0;
+    }
+
+    Stack::~Stack()
+    {
+        delete [] Array;
+    }
+
+    bool Stack::isEMpty()
+    {
+        if(top() == 0)
+        std::cout << "stack is empty!" << std::endl;
+        return !sptr;
+    }
+
+    void Stack::displayAll()
+    {
+        for(int i = 0; i < arraySize; i++)
+        {
+            std::cout << Array[i] << " ";
+        }
+        std::cout << std::endl;
+    }
+
+    int Stack::push(int element)
+    {
+        if(sptr < arraySize)
+            Array[sptr++] = element;
+    }
+
+    void Stack::pop()
+    {
+        if(sptr) sptr--;
+    }
+
+    int Stack::top()
+    {
+        if(sptr)
+        return Array[sptr - 1];
+    }
+
+int main()
+{
+    Stack S1(arraySize); //utworzenie stosu
+    S1.isEMpty(); //tu stos jest jeszcze pusty
+
+    S1.push(5);
+    S1.push(8);
+    S1.push(13);
+    S1.push(44);
+    S1.push(1);
+    S1.push(79);
+    S1.push(56);
+    S1.push(23);
+    S1.push(67);
+    S1.push(19);
+
+    S1.push(99); //element się nie doda bo stos jest już pełny
+    S1.isEMpty(); //nie wywoła się bo na stosie leżą już elementy
+    S1.displayAll();
+}
+
+
+//====================================================================================
+
+/*
+Zadanie 2
+Proszę o zaimplementowanie dowolnego algorytmu sortującego oraz opisanie zasady jego działania.
+*/
+
+/*
+Sortowanie przez selekcję. Złożoność O(n^2)
+W zbiorze szukam najmniejszego elementu i zamieniam go z elementem stojącym na pozycji pierwszej. Kolejno szukam następnego najmniejszego elementu ale tym razem w zbiorze pomniejszonym o pierwszy element i wstawiam go na pozycję drugą. Powtarzam operację na coraz to mniejszych zbiorach aż do uzyskania zbioru jednoelementowego. 
+*/
+#include <iostream>
+#include <ctime>
+
+int main()
+{
+    srand((unsigned)time(NULL)); //do losowania przypadkowych liczb
+    const int n = 10;
+    int array[n];
+
+//wypełnienie tablicy losowymi liczbami
+
+    std::cout << "before sorting" << std::endl;
+    for(int i = 0; i < n; i++)
+    {
+        array[i] = rand()%100;
+        std::cout << array[i] << " ";
+    }
+
+    std::cout << std::endl;
+
+//sortowanie
+    for(int j = 0; j < n; j++)
+    {
+        int min = j; //przechowuję indeks z najmniejszą wartością
+        for(int i = j + 1; i < n; i++)
+            if(array[i] < array[min]) min = i; //w pętli wyszukuję min element w podzbiorze nieposortowanym
+
+            std::swap(array[min], array[j]); //zamieniam element najmniejszy w podzbiorze z pierwszym nieposortowanym
+    }
+
+    std::cout << "after sorting" << std::endl;
+    for(int i = 0; i < n; i++)
+    {
+        std::cout << array[i] << " ";
+    }
+}
+
+//==============================================================================
+
+
+/*
+Zadanie 3
+Proszę o zaimplementowanie dowolnego algorytmu sortującego działającego przy pomocy rekurencji oraz opisanie zasady jego działania.
+*/
+
+/*
+Quicksort. Złożoność O(n*logn) ale w sytuacji pesymistycznej może wynosić O(n^2).
+Technika "dziel i zwyciężaj". Wg ustalonego schematu wybieram jeden element w sortowanej tablicy, tzw. pivot. Może to być element losowym. Następnie ustawiam elementy nie większe na lewo tej wartości, natomiast nie mniejsze na prawo. W ten sposób powstaną  dwie części tablicy (niekoniecznie równe), gdzie w pierwszej części znajdują się elementy nie większe od drugiej. Następnie każdą z tych podtablic sortuję osobno wg tego samego schematu. 
+*/
+#include <iostream>
+#include <ctime>
+
+const int N = 10;
+int array[N];
+
+void quicksort(int left, int right)
+{
+    int i, j, pivot; //i, j to wskaźniki
+
+    i = (left + right) / 2;
+    pivot = array[i]; //wyznaczam "środkowy" element na pivot
+    array[i] = array[right]; //przesuwam pivot na sam koniec, "zabezpieczam" go
+
+    for(j = i = left; i < right; i++)
+        if(array[i] < pivot)
+        {
+            std::swap(array[i], array[j]); //zamieniam elementy
+            j++; //przesuwam wskaźnik
+        }
+
+    array[right] = array[j]; 
+    array[j] = pivot;
+
+//rekurencyjnie sortuję obie części, podzbiory
+    if(left < j - 1)  quicksort(left, j - 1); //część lewa, elementy nie większe od pivotu
+    if(j + 1 < right) quicksort(j + 1, right); //część prawa, elementy nie mniejsze od pivotu
+}
+
+int main()
+{
+    int i;
+
+    srand((unsigned)time(NULL));
+
+//wypełnienie tablicy losowymi liczbami
+
+    std::cout << "before sorting" << std::endl;
+    for(i = 0; i < N; i++)
+    {
+        array[i] = rand() % 100;
+        std::cout << array[i] << " ";
+    }
+
+//sortowanie
+    quicksort(0, N - 1);
+
+    std::cout << std::endl;
+    std::cout << "after sorting" << std::endl;
+    for(i = 0; i < N; i++)
+    {
+        std::cout << array[i] << " ";
+    }
+}

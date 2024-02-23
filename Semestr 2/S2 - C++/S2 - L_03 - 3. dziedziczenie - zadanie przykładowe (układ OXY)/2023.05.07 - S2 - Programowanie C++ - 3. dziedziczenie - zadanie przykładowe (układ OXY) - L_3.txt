@@ -1,0 +1,47 @@
+W programie stwórz klasę reprezentującą punkt w układzie OXY. Klasa powinna zawierać:
+
+ 
+
+Chronione zmienne określające nazwę punktu (zmienna typu string) oraz współrzędną y (zmienna typu float).
+
+Prywatną zmienną określającą współrzędną x (zmienna typu float).
+
+Funkcję wyświetlającą dane punktu w formacie "Point: name(x, y)".
+
+W programie stwórz również klasę reprezentującą koło, która dziedziczy z klasy punkt. Klasa powinna zawierać:
+
+ 
+
+Prywatne zmienne określające nazwę (zmienna typu string) oraz promień (zmienna typu float).
+
+Funkcję wyświetlającą dane koła w formacie "Point: name(x, y), circle: name, radius = r".
+
+Funkcję obliczającą obwód koła (przyjmij PI = 3,14).
+
+W funkcji main należy:
+
+ 
+
+Stworzyć obiekt reprezentujący koło pobierając dane od użytkownika w następującej kolejności:
+
+- współrzędna x środka koła,
+
+- współrzędna y środka koła,
+
+- promień koła,
+
+- nazwa punktu będącego środkiem koła,
+
+- nazwa koła.
+
+Wyświetlić dane środka koła (używając odpowiedniej funkcji obiektu), dane koła (używając odpowiedniej funkcji obiektu) oraz obwód koła. Wszystkie trzy komponenty są oddzielone od siebie spacją.
+
+ 
+
+Przykładowo dla argumentów wejściowych
+
+0 0 1 P MyCircle
+
+program powinien wyświetlić
+
+Point: P(0, 0) Point: P(0, 0), circle: MyCircle, r =1 6.28

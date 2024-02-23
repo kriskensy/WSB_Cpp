@@ -1,0 +1,17 @@
+Napisz program, który realizuje dowolny katalog ale inny niż realizowny na zajęciach/pracy domowej.
+
+Katalog ma spełniać następującego wymagania:
+
+ma przechowywać obiekty klasy, której jednym z atrybutów będzie unikalny numer (ID),
+ma przechowywać dowolną liczbę obiektów, ma możliwość dodawania obiektu, w taki sposób, że obiekt jest dodawany tylko gdy nie ma innego obiektu w katalogu o tym samym numerze ID oraz jest dodawany w kolejności rosnącej/malejącej wybranego atrybutu innego niż ID,
+ma możliwość ususwania obiektu o danym ID,
+ma możlwiość wyświetlania wszystkich obiektów z katalogu.
+W celu wyświetlania oraz porównania obiektow należy przeciążyć operatory.
+
+W funkcji main() należy:
+
+Stworzyć obiekt reprezentujący katalog.
+Dodać obiekty do katalogu.
+Wyświetlić katalog.
+Usunąć obiekty o danym numerze ID.
+Wyświetlić katalog.
